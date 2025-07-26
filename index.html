@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dynamic Product Variant Switcher</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f0f0f0;
+    }
+
+    .product-card {
+      max-width: 400px;
+      margin: auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+    }
+
+    img {
+      width: 100%;
+      border-radius: 12px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin: 10px 0;
+    }
+
+    p {
+      font-size: 1.2rem;
+      color: #333;
+    }
+
+    .swatches {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .swatch {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+
+    .swatch[aria-checked="true"] {
+      border-color: #000;
+    }
+
+    .red { background: red; }
+    .blue { background: blue; }
+    .green { background: green; }
+
+    @media (max-width: 600px) {
+      .product-card {
+        margin: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<main class="product-card" id="productCard" aria-label="Product Display"></main>
+
+<script>
+  const productData = [
+    {
+      color: "Red",
+      image: "https://cdn.shopify.com/s/files/1/0420/7073/7058/files/24be7beba75888b5df5a50a0f97e5ee8_62f2d5c1-736b-4e2b-a8e8-2a9a3986103e.webp?v=1723461667&quality=20",
+      price: "₹ 999"
+    },
+    {
+      color: "Blue",
+      image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTklezuOoTOT20UcHVsTH9Cijv1i-cllqI6IxpQmNXr1GAxrVVO_7WWO8LYffQbjhbarZwUs0lxEa_-hwXpBc4zWsf8rAvErWDyJMf1liRadWzl5QnL2Y9GeA",
+      price: "₹ 1049"
+    },
+    {
+      color: "Green",
+      image: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcT89eyDDk55ezAqXV2DRROU2mCg2c71kOFnMLA9xf2gEpG40OLgEiDp9bAZ_YwouFEMtgbkaanJdbSIe2rPUiqX74u6uTFwXNnQ5yFIUbM",
+      price: "₹ 1099"
+    }
+  ];
+
+  const productCard = document.getElementById("productCard");
+
+  // Create dynamic HTML elements
+  const productImg = document.createElement("img");
+  const productTitle = document.createElement("h2");
+  const productPrice = document.createElement("p");
+  const swatchesDiv = document.createElement("div");
+  swatchesDiv.className = "swatches";
+  swatchesDiv.setAttribute("role", "radiogroup");
+
+  productCard.append(productImg, productTitle, productPrice, swatchesDiv);
+
+  function updateProduct(index) {
+    const product = productData[index];
+    productImg.src = product.image;
+    productImg.alt = product.color + " Shirt";
+    productTitle.textContent = product.color;
+    productPrice.textContent = product.price;
+
+    // Update aria-checked state
+    document.querySelectorAll(".swatch").forEach((btn, i) => {
+      btn.setAttribute("aria-checked", i === index ? "true" : "false");
+    });
+  }
+
+  // Render swatches dynamically
+  productData.forEach((item, index) => {
+    const btn = document.createElement("button");
+    btn.className = `swatch ${item.color.toLowerCase()}`;
+    btn.setAttribute("aria-label", item.color);
+    btn.setAttribute("role", "radio");
+    btn.setAttribute("aria-checked", index === 0 ? "true" : "false");
+
+    btn.addEventListener("click", () => updateProduct(index));
+    swatchesDiv.appendChild(btn);
+  });
+
+  // Initial load
+  updateProduct(0);
+</script>
+
+
+</body>
+</html>
